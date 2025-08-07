@@ -1,0 +1,57 @@
+document.addEventListener('DOMContentLoaded', function() {
+  const postLinks = document.querySelectorAll('.post-list a');
+  const postDetailContainer = document.getElementById('post-detail');
+  const backButton = document.getElementById('back-button');
+  const sectionsToHide = document.querySelectorAll('.profile-section, .posts-section, .blog-header p');
+  const commentInput = document.getElementById('comment-input');
+  const submitCommentBtn = document.getElementById('submit-comment');
+  const commentList = document.getElementById('comment-list');
+
+  postLinks.forEach(link => {
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+
+      sectionsToHide.forEach(section => {
+        section.style.display = 'none';
+      });
+      document.querySelector('.blog-header h1').style.display = 'none';
+
+      postDetailContainer.style.display = 'block';
+
+      document.querySelectorAll('.post-content').forEach(content => {
+        content.style.display = 'none';
+      });
+
+      const postId = this.getAttribute('data-post');
+      document.getElementById(`${postId}-content`).style.display = 'block';
+    });
+  });
+
+  backButton.addEventListener('click', function() {
+    sectionsToHide.forEach(section => {
+      section.style.display = 'block';
+    });
+    document.querySelector('.blog-header h1').style.display = 'block';
+
+    postDetailContainer.style.display = 'none';
+  });
+
+  // 댓글 추가 기능
+  submitCommentBtn.addEventListener('click', function() {
+      const commentText = commentInput.value.trim();
+      if (commentText !== '') {
+          const newComment = document.createElement('div');
+          newComment.classList.add('comment');
+          newComment.innerHTML = `<p><strong>익명</strong>: ${commentText}</p>`;
+          commentList.appendChild(newComment);
+          commentInput.value = ''; // 입력창 초기화
+      }
+  });
+
+  // 엔터키로 댓글 작성
+  commentInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+          submitCommentBtn.click();
+      }
+  });
+});
